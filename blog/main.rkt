@@ -1,51 +1,32 @@
 #lang web-server/insta
 
+(define Post1 (post "Title1" "Body1" (list)))
+(define Post3 (post "Title3" "Body3" (list "some comment1" "com2")))
+
+(static-files-path "res")
+
 ;; NOTE
 ;; embed/url generates URLs
 ;; -> embed/url f
 ;; -> f request
 ;; -> request-bindings request
 
+
 (require "model.rkt")
-
-(define Post1 (post "Title1" "Body1" (list)))
-(define Post3 (post "Title3" "Body3" (list "some comment1" "com2")))
-
 
 ; start
 (define (start request)
   (render-blog-page request))
-
-; parse-comment
-(define (parse-comment bindings)
-  (post (extract-binding/single 'comment bindings)))
-
-; can-parse-post?
-(define (can-parse-post? bindings)
-  (and (exists-binding? 'title bindings)
-       (exists-binding? 'body bindings)
-       (exists-binding? 'comments bindings)))
-
-; form-new-comment
-(define (form-new-comment embed/url insert-comment-handler)
-  `(form ((action ,(embed/url insert-comment-handler)))
-         (input ((name "comment")))
-         (input ((type "submit")))))
-
-; form-new-[pst
-(define (form-new-post embed/url insert-post-handler)
-  `(form ((action ,(embed/url insert-post-handler)))
-         (input ((name "title")))
-         (input ((name "body")))
-         (input ((type "submit")))))
 
 ; render-blog-page
 (define (render-blog-page request)
   (define (response-generator embed/url)
     (response/xexpr
      `(html
-       (style "html,div,h1,h2,h3,h4,p{background-color:rgba(50, 168, 82, 0.329);transition:background-color 0.1s;}div:hover{background-color:rgba(77, 138, 104, 0.34)}")
-       (head (title "My Blog"))
+       (head (title "My Blog")
+             (link ((rel "stylesheet")
+                    (href "/style.css")
+                    (type "text/css"))))
        (body
         (h1 "Under Construction")
         ,(render-posts embed/url)
@@ -63,6 +44,24 @@
     (render-blog-page request))
 
   (send/suspend/dispatch response-generator))
+
+; parse-comment
+(define (parse-comment bindings)
+  (post (extract-binding/single 'comment bindings)))
+
+; form-new-comment
+(define (form-new-comment embed/url insert-comment-handler)
+  `(form ((action ,(embed/url insert-comment-handler)))
+         (input ((name "comment")))
+         (input ((type "submit")))))
+
+; form-new-post
+(define (form-new-post embed/url insert-post-handler)
+  `(form ((action ,(embed/url insert-post-handler)))
+         (input ((name "title")))
+         (input ((name "body")))
+         (input ((type "submit")))))
+
 
 ; render-post-detail-page
 (define (render-post-detail-page a-post request)
@@ -158,3 +157,9 @@
   `(div ((class "post-comments"))
         ,@(map render-comment comments)))
 
+
+; can-parse-post?
+(define (can-parse-post? bindings)
+  (and (exists-binding? 'title bindings)
+       (exists-binding? 'body bindings)
+       (exists-binding? 'comments bindings)))

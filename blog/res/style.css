@@ -1,0 +1,23 @@
+html, body, div {
+  background-color: rgba(50, 168, 82, 0.329);
+  transition: background-color 0.1s;
+}
+
+div:hover {
+  background-color: rgba(77, 138, 104, 0.34)
+}
+/* body {
+
+  margin-left: 10%;
+
+  margin-right: 10%;
+
+}
+
+p { font-family: sans-serif }
+
+h1 { color: green }
+
+h2 { font-size: small }
+
+span.hot { color: red } */
