@@ -49,7 +49,10 @@
   (define (response-generator embed/url)
     (response/xexpr
      `(html
-       (head (title "Post Details"))
+       (head (title "Post Details")
+             (link ((rel "stylesheet")
+                    (href "/style.css")
+                    (type "text/css"))))
        (body
         (a ((href ,(embed/url view-blog-page-handler)))
            "Back")
@@ -82,7 +85,10 @@
   (define (response-generator embed/url)
     (response/xexpr
      `(html
-       (head (title "Confirmation"))
+       (head (title "Confirmation")
+             (link ((rel "stylesheet")
+                    (href "/style.css")
+                    (type "text/css"))))
        (body
         (h1 "Add a Comment")
         "The comment: " (div (p ,a-comment))
@@ -108,11 +114,10 @@
   (define (view-post-handler request)
     (render-post-detail-page a-blog a-post request))
   `(div ((class "post"))
-        (a ((href ,(embed/url view-post-handler)))
-           ,(post-title a-post))
-        (div ((class "post-head")) (p ,(post-title a-post)))
-        (div ((class "post-body")) (p ,(post-body a-post)))
-        ,(render-comments (post-comments a-post))))
+        (a ((class "post-link") (href ,(embed/url view-post-handler)))
+           (div ((class "post-title")) (h4 ,(post-title a-post)))
+           (div ((class "post-body")) (p ,(post-body a-post)))
+           ,(render-comments (post-comments a-post)))))
 
 ; render-posts
 (define (render-posts a-blog embed/url)

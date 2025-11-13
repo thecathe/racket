@@ -1,23 +1,121 @@
-html, body, div {
-  background-color: rgba(50, 168, 82, 0.329);
-  transition: background-color 0.1s;
+:root {
+  --theme-3-1-FF: #6b5b95FF;
+  --theme-3-1-70: #6b5b95B3;
+  --theme-3-2-FF: #feb236FF;
+  --theme-3-2-70: #feb236B3;
+  --theme-3-3-FF: #d64161FF;
+  --theme-3-3-70: #d64161B3;
+  --theme-3-4-FF: #ff7b25FF;
+  --theme-3-4-70: #ff7b25B3;
+
+  --theme-4-1-FF: #d5def5FF; 
+  --theme-4-1-70: #d5def5B3; 
+  --theme-4-2-FF: #8594e4FF; 
+  --theme-4-2-70: #8594e4B3; 
+  --theme-4-3-FF: #6643b5FF; 
+  --theme-4-3-70: #6643b5B3; 
+  --theme-4-4-FF: #430f58FF; 
+  --theme-4-4-70: #430f58B3; 
+
+  --col-fg-1-70: var(--theme-3-1-70);
+  --col-fg-1-FF: var(--theme-3-1-FF);
+  
+  --col-fg-2-70: var(--theme-3-3-70);
+  --col-fg-2-FF: var(--theme-3-3-FF);
+  
+  --col-bg-1-70: var(--theme-3-4-70);
+  --col-bg-1-FF: var(--theme-3-4-FF);
+  
+  --col-bg-2-70: var(--theme-3-2-70);
+  --col-bg-2-FF: var(--theme-3-2-FF);
+
+  --var-animwobble-rotate: 1.2px;
 }
 
-div:hover {
-  background-color: rgba(77, 138, 104, 0.34)
-}
-/* body {
-
-  margin-left: 10%;
-
-  margin-right: 10%;
-
+html {
+  background-color: var(--col-bg-2-FF);
 }
 
-p { font-family: sans-serif }
 
-h1 { color: green }
+* {
+  scale: 100%;
+  padding: 2pt;
+  margin: 2pt;
+}
 
-h2 { font-size: small }
+div.posts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  background-color: var(--col-bg-2-FF);
+}
 
-span.hot { color: red } */
+div.post {
+  max-width: 6cm;
+  min-width: 6cm;
+  flex: 1;
+  box-shadow: 0px 0px 15px 0px var(--col-fg-1-FF);
+  border: 0pt solid var(--col-fg-1-FF);
+  background-color: var(--col-fg-1-FF);
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  transition: background-color 0.66s ease-out
+            , box-shadow 1s ease
+            , scale 0.33s ease-out
+            , translate 0s ease-in-out
+            ;
+  animation-name: AniWobble;
+  animation-duration: 6s;
+  animation-iteration-count: infinite;
+  animation-timing-function: linear;
+  animation-fill-mode: both;
+  animation-play-state: paused;
+  animation-direction: alternate-reverse;
+  z-index: 40;
+}
+
+div.post:hover {
+  box-shadow: 0px 0px 25px 5px var(--col-fg-2-FF);
+  border: 0pt solid var(--col-fg-2-FF);
+  background-color: var(--col-fg-2-FF);
+  scale: 104%;
+  animation-play-state: running;
+  z-index: 70;
+}
+
+div.post a.post-link {
+  width: calc(100% - 16pt);
+}
+
+div.post div {
+  width: 100%;
+  border: 0pt solid var(--col-bg-2-FF);
+  background-color: var(--col-bg-2-FF);
+}
+
+div.post:hover div {
+  border: 0pt solid var(--col-fg-2-FF);
+  background-color: var(--col-bg-2-FF);
+  transition: background-color 0.66s ease-out
+            /* ,  */
+            ;
+}
+
+@keyframes AniWobble {
+  0%, 100% 
+  { transform: translate(0); rotate: 0deg;
+  }
+  20% 
+  { transform: translate(var(--var-animwobble-rotate), calc(-1 * var(--var-animwobble-rotate))); rotate: -2deg;
+  }
+  40% 
+  { transform: translate(var(--var-animwobble-rotate), var(--var-animwobble-rotate)); rotate: 1deg;
+  }
+  60% 
+  { transform: translate(var(--var-animwobble-rotate), var(--var-animwobble-rotate)); rotate: 3deg;
+  }
+  80% 
+  { transform: translate(var(--var-animwobble-rotate), var(--var-animwobble-rotate)); rotate: -3deg;
+  }
+}
