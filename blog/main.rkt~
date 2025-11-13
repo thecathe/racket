@@ -15,8 +15,8 @@
 (define (start request)
   (render-blog-page
    (initialize-blog!
-    ;(build-path 'same "res" "the-blog-data.db"))
-    (build-path (current-directory) "the-blog-data.db"))
+    (build-path (current-directory)
+                "the-blog-data.db"))
    request))
 
 ; render-blog-page
