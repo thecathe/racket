@@ -29,7 +29,9 @@
   --col-bg-2-70: var(--theme-3-2-70);
   --col-bg-2-FF: var(--theme-3-2-FF);
 
-  --var-animwobble-rotate: 1.2px;
+  /* variables */
+
+  --var-animwobble-translate: 1.2px;
 }
 
 html {
@@ -48,6 +50,7 @@ div.posts {
   flex-wrap: wrap;
   align-items: flex-start;
   background-color: var(--col-bg-2-FF);
+  perspective: 100px;
 }
 
 div.post {
@@ -64,6 +67,7 @@ div.post {
             , box-shadow 1s ease
             , scale 0.33s ease-out
             , translate 0s ease-in-out
+            , rotate 0.66s ease-in-out
             ;
   animation-name: AniWobble;
   animation-duration: 6s;
@@ -82,10 +86,12 @@ div.post:hover {
   scale: 104%;
   animation-play-state: running;
   z-index: 70;
+  transform-style: preserve-3d;
 }
 
 div.post a.post-link {
   width: calc(100% - 16pt);
+  text-decoration: none;
 }
 
 div.post div {
@@ -102,20 +108,109 @@ div.post:hover div {
             ;
 }
 
+#post-1 {
+  animation-name: AniWobble;
+}
+
+#post-2 {
+  animation-name: AniWobble2;
+}
+
+#post-3 {
+  animation-name: AniWobble3;
+}
+
 @keyframes AniWobble {
   0%, 100% 
-  { transform: translate(0); rotate: 0deg;
+  { transform: translate(0) 
+  ; rotate: 0 0 1 0deg;
   }
   20% 
-  { transform: translate(var(--var-animwobble-rotate), calc(-1 * var(--var-animwobble-rotate))); rotate: -2deg;
+  { transform: 
+      translate( var(--var-animwobble-translate)
+               , calc(-1 * var(--var-animwobble-translate)))
+  ; rotate: 0 0 1 -2deg
+  ; 
   }
   40% 
-  { transform: translate(var(--var-animwobble-rotate), var(--var-animwobble-rotate)); rotate: 1deg;
+  { transform: translate(var(--var-animwobble-translate), var(--var-animwobble-translate))
+  ;
+  ; rotate: 0 0 1 4deg;
   }
   60% 
-  { transform: translate(var(--var-animwobble-rotate), var(--var-animwobble-rotate)); rotate: 3deg;
+  { transform: translate(var(--var-animwobble-translate), var(--var-animwobble-translate))
+  ;
+  ; rotate: 0 0 1 3deg;
   }
   80% 
-  { transform: translate(var(--var-animwobble-rotate), var(--var-animwobble-rotate)); rotate: -3deg;
+  { transform: translate(var(--var-animwobble-translate), var(--var-animwobble-translate))
+  ;
+  ; rotate: 0 0 1 -3deg;
+  }
+}
+
+@keyframes AniWobble2 {
+  0%, 100% 
+  { transform: translate(0) 
+  ; rotate: 0 0 1 0deg;
+  }
+  20% 
+  { transform: 
+      translate( var(--var-animwobble-translate)
+               , calc(-1 * var(--var-animwobble-translate)))
+  ; rotate: 1 0 1 -2deg
+  ; 
+  }
+  40% 
+  { transform: translate(var(--var-animwobble-translate), var(--var-animwobble-translate))
+  ;
+  ; rotate: 1 1 1 4deg;
+  }
+  60% 
+  { transform: translate(var(--var-animwobble-translate), var(--var-animwobble-translate))
+  ;
+  ; rotate: 0 0 1 3deg;
+  }
+  80% 
+  { transform: translate(var(--var-animwobble-translate), var(--var-animwobble-translate))
+  ;
+  ; rotate: 0 1 1 -3deg;
+  }
+}
+
+@keyframes AniWobble3 {
+  0%, 100% 
+  { transform: translate(0) 
+  ; rotate: 0 0 1 0deg;
+  }
+  20% 
+  { transform: 
+      translate( var(--var-animwobble-translate)
+               , calc(-1 * var(--var-animwobble-translate)))
+      rotateX(-1deg)
+      rotateY(1.5deg)
+  /* ; rotate: 0 0 1 -2deg */
+  ; 
+  }
+  40% 
+  { transform: translate(var(--var-animwobble-translate), var(--var-animwobble-translate))
+      rotateX(2deg)
+      rotateY(-1.5deg)
+  ;
+  /* ; rotate: 0 0 1 4deg; */
+  }
+  60% 
+  { transform: translate(var(--var-animwobble-translate), var(--var-animwobble-translate))
+      rotateX(1.5deg)
+      rotateY(-1deg)
+  ;
+  /* ; rotate: 0 0 1 3deg; */
+  }
+  80% 
+  { transform: translate(var(--var-animwobble-translate), var(--var-animwobble-translate))
+      rotateX(-1.5deg)
+      rotateY(2deg)
+  ;
+  /* ; rotate: 0 0 1 -3deg; */
   }
 }

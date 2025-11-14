@@ -1,5 +1,7 @@
 #lang web-server/insta
 
+(require db)
+
 (static-files-path "res")
 
 ;; NOTE
@@ -59,7 +61,8 @@
         (h1 "Post details")
         (h2 ,(post-title a-post))
         (p ,(post-body a-post))
-        ,(render-as-itemized-list (post-comments a-post))
+        ;,(render-as-itemized-list (post-comments a-post))
+        ,(render-comments (post-comments a-post))
         ,(form-new-comment embed/url insert-comment-handler)))))
 
   ; parse-comment
@@ -104,7 +107,7 @@
     (post-insert-comment! a-blog a-post a-comment)
     (render-post-detail-page a-blog a-post (redirect/get)))
 
-  (define (cancel-handler a-blog request)
+  (define (cancel-handler request)
     (render-post-detail-page a-blog a-post request))
 
   (send/suspend/dispatch response-generator))
@@ -113,11 +116,13 @@
 (define (render-post a-blog a-post embed/url)
   (define (view-post-handler request)
     (render-post-detail-page a-blog a-post request))
-  `(div ((class "post"))
+  `(div ((class "post") (id , (post-id->string a-post)))
         (a ((class "post-link") (href ,(embed/url view-post-handler)))
            (div ((class "post-title")) (h4 ,(post-title a-post)))
            (div ((class "post-body")) (p ,(post-body a-post)))
-           ,(render-comments (post-comments a-post)))))
+           (div ((class "post-comments-num"))
+                (p ,(number->string (length (post-comments a-post)))
+                " comment(s)")))))
 
 ; render-posts
 (define (render-posts a-blog embed/url)
