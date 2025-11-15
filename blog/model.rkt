@@ -1,13 +1,46 @@
 #lang racket
 
 (require racket/list
-         db)
+         db
+         rebellion/type/enum)
 
 (provide blog? blog-posts
          post? post-title post-body post-comments post-id->string
          initialize-blog!
          blog-insert-post!
          post-insert-comment!)
+
+; page-enum
+(define-enum-type page-view (view/blog view/post view/confirmation))
+(define (page-views) (list view/blog view/post view/confirmation))
+(define/contract (page-view->string a-view)
+  (-> page-view? string?)
+  (match a-view
+    [(== view/blog) "view/blog"]
+    [(== view/post) "view/post"]
+    [(== view/confirmation) "view/confirmation"]))
+
+; role-enum
+(define-enum-type role (role/admin role/user))
+(define (roles) (list role/admin role/user))
+(define/contract (role->string a-role)
+  (-> role? string?)
+  (match a-role
+    [(== role/admin) "role/admin"]
+    [(== role/user) "role/user"]))
+
+; current-page ; current-role
+(struct current-page (page-view) #:mutable)
+(struct current-role (role) #:mutable #:auto-value role/user)
+
+; enum-keyset->string-list
+(define (enum-keyset->string-list a-keyset key->string)
+  (map key->string a-keyset))
+
+; enum-keyset->csv
+(define (enum-keyset->csv a-keyset key->string)
+  (string-join (enum-keyset->string-list a-keyset key->string)
+                "    ,    "))
 
 ;(struct blog (home-path posts) #:mutable #:prefab)
 ;(struct post (title body comments) #:mutable #:prefab)
@@ -39,7 +72,7 @@
 (define (post-comments a-post)
   (query-list
    (blog-db (post-blog a-post))
-   "SELECT content FROM comments WHERE pid = ?"
+   "SELECT content FROM comments WHERE post_id = ?"
    (post-id a-post)))
 
 (define (post-id->string a-post)
@@ -53,12 +86,23 @@
   (unless (table-exists? db "posts")
     (query-exec
      db
-     (string-append "CREATE TABLE posts "
-                    "(id INTEGER PRIMARY KEY, title TEXT, body TEXT)")))
+     (string-append
+      "CREATE TABLE posts "
+      "(id INTEGER PRIMARY KEY, title TEXT, body TEXT)")))
   (unless (table-exists? db "comments")
     (query-exec
      db
-     "CREATE TABLE comments (pid INTEGER, content TEXT)"))
+     "CREATE TABLE comments (id INTEGER PRIMARY KEY, post_id INTEGER, content TEXT)"))
+  (unless (table-exists? db "metadata")
+    `(query-exec
+     db
+     (string-join
+       ("CREATE TABLE metadata "
+        "(id INTEGER PRIMARY KEY, "
+        "role ENUM (" ,(enum-keyset->csv (roles) role->string) ") "
+        "last_used DATETIME, "
+        "last_page ENUM (" ,(enum-keyset->csv (page-views) page-view->string) ")"
+        ")"))))
   the-blog)
   ; if no blog found, return default (empty list)
   ;(define (log-missing-exn-handler exn)
@@ -91,5 +135,5 @@
 (define (post-insert-comment! a-blog p a-comment)
   (query-exec
    (blog-db a-blog)
-   "INSERT INTO comments (pid, content) VALUES (?, ?)"
+   "INSERT INTO comments (post_id, content) VALUES (?, ?)"
    (post-id p) a-comment))
