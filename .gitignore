@@ -1,1 +1,4 @@
-*.bck
+*.bak
+*.dep
+*.zo
+*.rkt~
