@@ -2,6 +2,8 @@
 
 (require web-server/servlet
          web-server/formlets
+         ;  web-server/safety-limits
+         web-server/dispatch
          db)
 
 (provide/contract (start (request? . -> . response?)))
@@ -10,10 +12,22 @@
 
 ; start
 (define (start request)
-  (render-blog-page
-   (initialize-blog!
-    (build-path (current-directory) "the-blog-data.sqlite"))
-   request))
+  (blog-dispatch request))
+
+; blog-dispatch
+(define-values (blog-dispatch request)
+  (dispatch-rules 
+  [("") (render-initial-blog-page request)]
+  [else (render-initial-blog-page request)]
+  ))
+
+; (define (initialized-blog)
+;   (initialize-blog!
+;    (build-path (current-directory) "the-blog.db")))
+
+(define (render-initial-blog-page request) 
+  (render-blog-page (initialize-blog!
+   (build-path (current-directory) "the-blog.db")) request))
 
 ; back-to-homepage
 ; (define (back-to-homepage a-blog view-blog-page-handler embed/url)
@@ -265,4 +279,6 @@
                #:servlet-path "/blog"
                #:servlets-root (build-path "res")
                #:server-root-path "./"
-               #:extra-files-paths (list (build-path "res")))
+               #:extra-files-paths (list (build-path "res"))
+               ;  #:safety-limits (make-safety-limits )
+               )
