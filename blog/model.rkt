@@ -39,8 +39,8 @@
 
 ; enum-keyset->csv
 (define (enum-keyset->csv a-keyset key->string)
-  (string-join (enum-keyset->string-list a-keyset key->string)
-                "    ,    "))
+  (string-join (enum-keyset->string-list a-keyset key->string) 
+  ", "))
 
 ;(struct blog (home-path posts) #:mutable #:prefab)
 ;(struct post (title body comments) #:mutable #:prefab)
@@ -104,6 +104,7 @@
         "last_page ENUM (" ,(enum-keyset->csv (page-views) page-view->string) ")"
         ")"))))
   the-blog)
+
   ; if no blog found, return default (empty list)
   ;(define (log-missing-exn-handler exn)
   ;  (blog (path->string home-path) empty))
@@ -116,13 +117,12 @@
   ;the-blog)
      
 ; save blog
-#;
-(define (save-blog! a-blog)
-  (define (write-to-blog)
-    (write a-blog))
-  (with-output-to-file (blog-home-path a-blog)
-    write-to-blog
-    #:exists 'replace))
+; (define (save-blog! a-blog)
+;   (define (write-to-blog)
+;     (write a-blog))
+;   (with-output-to-file (blog-home-path a-blog)
+;     write-to-blog
+;     #:exists 'replace))
 
 ; blog-insert-post
 (define (blog-insert-post! a-blog title body)

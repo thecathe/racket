@@ -53,6 +53,27 @@ div.container {
   flex-wrap: wrap;
 }
 
+.heading {
+  font-weight: 700;
+  font-size: larger;
+  font-family: FreeMono, monospace;
+}
+
+h1.heading {
+  font-size: xx-large;
+}
+ 
+h2.heading {
+  font-size: x-large;
+}
+ 
+.nav-btn {
+  padding-left: 8px;
+  padding-right: 8px;
+  color: whitesmoke;
+  background-color: var(--col-fg-2-FF);
+}
+
 #nav-bar {
   align-items: flex-start;
   background-color: var(--col-bg-1-FF);
@@ -65,16 +86,22 @@ div.container {
   perspective: 100px;
 }
 
-div.post {
-  max-width: 6cm;
-  min-width: 6cm;
-  flex: 1;
+.lift {
+  z-index: 40;
   box-shadow: 0px 0px 15px 0px var(--col-fg-1-FF);
   border: 0pt solid var(--col-fg-1-FF);
   background-color: var(--col-fg-1-FF);
-  display: flex;
-  flex-wrap: wrap;
-  align-content: flex-start;
+}
+
+.lift:hover {
+  box-shadow: 0px 0px 25px 5px var(--col-fg-2-FF);
+  border: 0pt solid var(--col-fg-2-FF);
+  background-color: var(--col-fg-2-FF);
+  scale: 104%;
+  z-index: 70;
+}
+
+.wobble {
   transition: background-color 0.66s ease-out
             , box-shadow 1s ease
             , scale 0.33s ease-out
@@ -88,21 +115,179 @@ div.post {
   animation-fill-mode: both;
   animation-play-state: paused;
   animation-direction: alternate-reverse;
-  z-index: 40;
 }
 
-div.post:hover {
-  box-shadow: 0px 0px 25px 5px var(--col-fg-2-FF);
-  border: 0pt solid var(--col-fg-2-FF);
-  background-color: var(--col-fg-2-FF);
-  scale: 104%;
+.wobble:hover {
   animation-play-state: running;
-  z-index: 70;
   transform-style: preserve-3d;
 }
 
+div.post {
+  max-width: 6cm;
+  min-width: 6cm;
+  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  height: 4cm;
+  padding: 0px;
+}
+
 div.post a.post-link {
-  width: calc(100% - 16pt);
+  /* width: calc(100% - 16pt); */
+  height: calc(100% - 10px);
+  width: calc(100% - 10px);
+  padding: 0px;
+  margin: 5px;
+  /* height: 100%; */
+}
+
+div.post a.post-link div {
+  /* width: calc(100% - 16pt); */
+  /* width: 100%; */
+  padding: 0px;
+  margin: 0px;
+  align-items:center;
+}
+
+div.post a.post-link div.post-title {
+  height: calc((100% * ((1/6) + (1/8))) - 5px);
+  margin-bottom: 5px;
+}
+
+div.post a.post-link div.post-title h4 {
+  margin: 0px;
+  /* padding-left: 5px; */
+  /* align-items:center; */
+}
+
+div.post a.post-link div.post-body {
+  width: 100%;
+  padding: 0px;
+  margin: 0px;
+  transition: height 5s linear
+            , visibility 2s ease
+  ;
+  resize: vertical;
+  height: 100%;
+  /* overflow: hidden; */
+  /* text-overflow: ellipsis ellipsis; */
+}
+
+
+div.post a.post-link div.post-body p {
+  text-overflow: ellipsis ellipsis;
+  overflow: hidden;
+  height: 100%;
+  margin: 0px;
+  padding: 0px;
+  /* height: calc((100% * (1 - ((1/6) + (1/8) + (1/5)))) - 5px); */
+  background-color: var(--col-bg-2-FF);
+}
+
+div.post a.post-link div.post-body-wrap {
+  margin-bottom: 5px;
+  width: 100%;
+  /* height: calc((100% * ((1/4) + (1/5)))); */
+  height: calc((100% * (1 - ((1/6) + (1/8) + (1/5)))) - 5px);
+  transition: height 1s ease-in-out
+  ;
+  /* resize: vertical; */
+  /* margin-bottom: 0px; */
+  /* float:inline-start; */
+  background-color: var(--col-bg-1-FF);
+}
+
+div.post:hover a.post-link div.post-body-wrap {
+  height: calc((100% * (1 - ((1/6) + (1/8)))) - 0px);
+  /* animation-name: GrowV;
+  animation-duration: 1s;
+  animation-iteration-count: 1;
+  animation-timing-function: linear; */
+  /* animation-direction: alternate-reverse; */
+  animation-fill-mode: both;
+  align-self: flex-start;
+}
+
+div.post a.post-link div.post-comments-num {
+  width: 100%;
+  height:100%;
+  padding: 0px;
+  margin: 0px;
+  transition: opacity 1s ease-in-out
+            , visibility 1s ease-in-out
+  ;
+  /* visibility: inherit; */
+  /* resize: vertical; */
+  /* animation-name: FadeOut;
+  animation-duration: 0.2s;
+  animation-iteration-count: 1;
+  animation-timing-function: ease-in-out;
+  animation-play-state: paused; */
+  /* align-self:baseline; */
+}
+
+
+div.post a.post-link div.post-comments-num p {
+  transition: opacity 0.2s ease-in-out
+  ;
+  visibility: inherit;
+  /* animation-name: CommentFadeIn;
+  animation-duration: 1s;
+  animation-iteration-count:1;
+  animation-play-state: running;
+  animation-timing-function: ease-in-out;
+  animation-direction: alternate-reverse; */
+}
+
+div.post:hover a.post-link div.post-comments-num p {
+  opacity: 0;
+  animation-play-state: paused;
+}
+
+div.post:not(:hover) a.post-link div.post-comments-num {
+  transition-delay: 0.6s;
+  opacity: 1;
+  /* animation-name: ShrinkV; */
+  /* animation-play-state: running; */
+}
+
+div.post:hover a.post-link div.post-comments-num {
+  visibility:hidden;
+  opacity: 0;
+  /* animation-name: ShrinkV; */
+  /* animation-play-state: running; */
+}
+
+div.post a.post-link div.post-comments-wrap {
+  margin-bottom: 5px;
+  width: 100%;
+  transition: height 1s ease-in-out
+  ;
+  /* animation-name: ShrinkV; */
+  /* animation-play-state:paused;
+  animation-name: ShrinkV2;
+  animation-duration: 1s;
+  animation-iteration-count:1;
+  animation-timing-function: ease-in-out;
+  animation-direction: alternate;
+  animation-fill-mode: forwards; */
+  /* animation-delay: -1s; */
+  /* resize: vertical; */
+  /* align-self:baseline; */
+  /* resize: vertical; */
+  /* margin-top: 0px; */
+  /* float:inline-end; */
+  /* height: calc(100% * (1 - ((1/6) + (1/8) + (1/4) + (1/5)))); */
+  height: calc((100% * (1/5)) - 5px);
+  background-color: var(--col-bg-1-FF);
+  visibility: visible;
+}
+
+div.post:hover a.post-link div.post-comments-wrap {
+  /* animation-play-state: running; */
+  height: 0px;
+  align-self: flex-end;
 }
 
 div.post div {
@@ -111,15 +296,80 @@ div.post div {
   background-color: var(--col-bg-2-FF);
 }
 
-div.post:hover div {
+/* div.post:hover div {
   border: 0pt solid var(--col-fg-2-FF);
   background-color: var(--col-bg-2-FF);
   transition: background-color 0.66s ease-out
-            /* ,  */
             ;
+} */
+
+@keyframes ScaleUpX {
+  0% { transform: scaleY(1.0); }
+  20% { transform: scaleY(1.2); }
+  40% { transform: scaleY(1.4); }
+  60% { transform: scaleY(1.6); }
+  80% { transform: scaleY(1.8); }
+  100% { transform: scaleY(2.0); }
 }
 
-#post-1 {
+@keyframes ScaleDownX {
+  0% { transform: scaleY(1.0); }
+  20% { transform: scaleY(0.8); }
+  40% { transform: scaleY(0.6); }
+  60% { transform: scaleY(0.4); }
+  80% { transform: scaleY(0.2); }
+  100% { transform: scaleY(0.0); }
+}
+
+@keyframes GrowV {
+  0% { height: 0%; }
+  20% { height: calc(20% + 2cm); }
+  40% { height: calc(40% + 2cm); }
+  60% { height: calc(60% + 2cm); }
+  80% { height: calc(80% + 2cm); }
+  100% { height: calc(100% + 2cm); }
+}
+
+@keyframes ShrinkV {
+  0% { height: calc(100% - 2cm); }
+  20% { height: calc(80% - 2cm); }
+  40% { height: calc(60% - 2cm); }
+  60% { height: calc(40% - 2cm); }
+  80% { height: calc(20% - 2cm); }
+  100% { height:calc( 0% - 2cm); }
+}
+
+@keyframes ShrinkV2 {
+  0% { height: calc(((100% * (1/5)) - 5px) * 1.0); 
+  visibility: visible;}
+  20% { height: calc((((100% * (1/5)) - 5px) * 0.8)); }
+  40% { height: calc((((100% * (1/5)) - 5px) * 0.6)); }
+  60% { height: calc((((100% * (1/5)) - 5px) * 0.4)); }
+  80% { height: calc((((100% * (1/5)) - 5px) * 0.2)); }
+  100% { height:calc((((100% * (1/5)) - 5px) * 0.0));
+  visibility: hidden;
+   }
+}
+
+@keyframes FadeOut {
+  0% { opacity: 1.0; }
+  20% { opacity: 0.8; }
+  40% { opacity: 0.6; }
+  60% { opacity: 0.4; }
+  80% { opacity: 0.2; }
+  100% { opacity: 0.0; }
+}
+
+@keyframes CommentFadeIn {
+  0% { opacity: 0; }
+  20% { opacity: 0; }
+  40% { opacity: 0; }
+  60% { opacity: 0.4; }
+  80% { opacity: 0.8; }
+  100% { opacity: 1; }
+}
+
+/* #post-1 {
   animation-name: AniWobble;
 }
 
@@ -129,7 +379,7 @@ div.post:hover div {
 
 #post-3 {
   animation-name: AniWobble3;
-}
+} */
 
 @keyframes AniWobble {
   0%, 100% 

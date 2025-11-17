@@ -6,35 +6,23 @@
 
 (provide/contract (start (request? . -> . response?)))
 
-(static-files-path "res")
-
-;; NOTE
-;; embed/url generates URLs
-;; -> embed/url f
-;; -> f request
-;; -> request-bindings request
-
-
 (require "model.rkt")
 
 ; start
 (define (start request)
   (render-blog-page
    (initialize-blog!
-    ;(build-path 'same "res" "the-blog-data.db"))
     (build-path (current-directory) "the-blog-data.sqlite"))
    request))
 
 ; back-to-homepage
-#;
-(define (back-to-homepage a-blog view-blog-page-handler embed/url)
-  `(a ((id "back-to-homepage")
-       (class "nav-btn")
-       (href ,(embed/url view-blog-page-handler)))
-      "Back"))
+; (define (back-to-homepage a-blog view-blog-page-handler embed/url)
+;   `(a ((id "back-to-homepage")
+;        (class "nav-btn heading lift")
+;        (href ,(embed/url view-blog-page-handler)))
+;       "Back"))
 
 ; render-blog-page
-
 (define (render-blog-page a-blog request)
   ; view-blog-page-handler
   ; when defining a handler, it must point to something that has a response-generator
@@ -49,15 +37,14 @@
                     (href "/style.css")
                     (type "text/css"))))
        (body
-        ; header
-        (h1 "Under Construction")
+        ; heading
+        (h1 ((class "heading")) "Under Construction")
         ; nav-bar
         (div ((id "nav-bar") (class "container"))
-             (div ((id "nav-homepage-container") (class "nav-btn"))
-                  (a ((id "nav-homepage-btn")
-                      (class "nav-btn")
-                      (href ,(embed/url view-blog-page-handler)))
-                     "Blog")))
+             (a ((id "nav-homepage-btn")
+                 (class "nav-btn heading lift")
+                 (href ,(embed/url view-blog-page-handler)))
+                "Blog"))
         ; main-content
         ,(render-posts a-blog embed/url)
         (form ([action ,(embed/url insert-post-handler)])
@@ -88,12 +75,12 @@
              #:attributes '([id "new-post-body"] [class "form-text form-body"]))))
           . => . body))
    (values title body)))
-#;
-(define new-post-formlet
-  (formlet
-   (#%# ,{input-string . => . title}
-        ,{input-string . => . body})
-   (values title body)))
+
+; (define new-post-formlet
+;   (formlet
+;    (#%# ,{input-string . => . title}
+;         ,{input-string . => . body})
+;    (values title body)))
 
 ; render-post-detail-page
 (define (render-post-detail-page a-blog a-post request)
@@ -109,15 +96,14 @@
                     (href "/style.css")
                     (type "text/css"))))
        (body
-        ; header
-        (h1 "View Post")
+        ; heading
+        (h1 ((class "heading")) "View Post")
         ; nav-bar
         (div ((id "nav-bar") (class "banner-container"))
-             (div ((id "nav-homepage-container") (class "nav-btn"))
-                  (a ((id "nav-homepage-btn")
-                      (class "nav-btn")
-                      (href ,(embed/url view-blog-page-handler)))
-                     "Blog")))
+             (a ((id "nav-homepage-btn")
+                 (class "nav-btn heading lift")
+                 (href ,(embed/url view-blog-page-handler)))
+                "Blog"))
         ; main-content
         (h2 "Post details")
         (h3 ,(post-title a-post))
@@ -167,15 +153,14 @@
                     (href "/style.css")
                     (type "text/css"))))
        (body
-        ; header
-        (h1 "Comment Confirmation")
+        ; heading
+        (h1 ((class "heading")) "Comment Confirmation")
         ; nav-bar
         (div ((id "nav-bar") (class "banner-container"))
-             (div ((id "nav-homepage-container") (class "nav-btn"))
-                  (a ((id "nav-homepage-btn")
-                      (class "nav-btn")
-                      (href ,(embed/url view-blog-page-handler)))
-                     "Blog")))
+             (a ((id "nav-homepage-btn")
+                 (class "nav-btn heading lift")
+                 (href ,(embed/url view-blog-page-handler)))
+                "Blog"))
         ; main content
         (h3 "Add a Comment")
         (div ((class ""))
@@ -206,13 +191,15 @@
 (define (render-post a-blog a-post embed/url)
   (define (view-post-handler request)
     (render-post-detail-page a-blog a-post request))
-  `(div ((id , (post-id->string a-post)) (class "post"))
+  `(div ((id ,(post-id->string a-post)) (class "post lift wobble"))
         (a ((class "post-link") (href ,(embed/url view-post-handler)))
-           (div ((class "post-title")) (h4 ,(post-title a-post)))
-           (div ((class "post-body")) (p ,(post-body a-post)))
-           (div ((class "post-comments-num"))
-                (p ,(number->string (length (post-comments a-post)))
-                   " comment(s)")))))
+           (div ((class "post-title heading")) (h4 ,(post-title a-post)))
+           (div ((class "post-body-wrap"))
+                (div ((class "post-body")) (p ,(post-body a-post))))
+           (div ((class "post-comments-wrap"))
+                (div ((class "post-comments-num"))
+                     (p ,(number->string (length (post-comments a-post)))
+                        " comment(s)"))))))
 
 ; render-posts
 (define (render-posts a-blog embed/url)
@@ -269,12 +256,13 @@
 
 
 
-(require web-server/servlet/env)
+(require web-server/servlet-env)
 (serve/servlet start
                #:launch-browser? #f
-               #:quit? #f
+               #:quit? #t
                #:listen-ip #f
-               #:port 8000
-               #:extra-files-paths (list (build-path "./" "data"))
-               #:servlet-path "servlets/blog.rkt"
-               #:server-root-path "./")
+               #:port 8080
+               #:servlet-path "/blog"
+               #:servlets-root (build-path "res")
+               #:server-root-path "./"
+               #:extra-files-paths (list (build-path "res")))
